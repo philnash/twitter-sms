@@ -1,0 +1,64 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.3.6)
+    buftok (0.2.0)
+    builder (3.2.2)
+    daemons (1.1.9)
+    envyable (0.1.0)
+    equalizer (0.0.9)
+    eventmachine (1.0.4)
+    faraday (0.9.1)
+      multipart-post (>= 1.2, < 3)
+    http (0.6.3)
+      http_parser.rb (~> 0.6.0)
+    http_parser.rb (0.6.0)
+    json (1.8.2)
+    jwt (1.0.0)
+    memoizable (0.4.2)
+      thread_safe (~> 0.3, >= 0.3.1)
+    multi_json (1.10.1)
+    multipart-post (2.0.0)
+    naught (1.0.0)
+    rack (1.5.2)
+    rack-protection (1.5.3)
+      rack
+    rake (10.4.2)
+    simple_oauth (0.3.1)
+    sinatra (1.4.5)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
+    thin (1.6.3)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0)
+      rack (~> 1.0)
+    thread_safe (0.3.4)
+    tilt (1.4.1)
+    twilio-ruby (3.14.4)
+      builder (>= 2.1.2)
+      jwt (~> 1.0.0)
+      multi_json (>= 1.3.0)
+    twitter (5.13.0)
+      addressable (~> 2.3)
+      buftok (~> 0.2.0)
+      equalizer (~> 0.0.9)
+      faraday (~> 0.9.0)
+      http (~> 0.6.0)
+      http_parser.rb (~> 0.6.0)
+      json (~> 1.8)
+      memoizable (~> 0.4.0)
+      naught (~> 1.0)
+      simple_oauth (~> 0.3.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  envyable
+  rack (~> 1.5.0)
+  rake
+  sinatra
+  thin
+  twilio-ruby
+  twitter (~> 5.13.0)
