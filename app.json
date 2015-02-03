@@ -1,0 +1,54 @@
+{
+  "name": "Twitter SMS",
+  "description": "Send and receive tweets by SMS, powered by Twilio",
+  "keywords": [
+    "twitter",
+    "twilio",
+    "sms"
+  ],
+  "scripts": {
+    "postdeploy": "bundle exec rake twilio:setup"
+  },
+  "env": {
+    "HEROKU_APP_NAME": {
+      "required": true,
+      "description": "Please name your application above and then copy the name to this field."
+    },
+    "TWILIO_ACCOUNT_SID": {
+      "required": true,
+      "description": "Your Twilio Account SID found on your account dashboard."
+    },
+    "TWILIO_AUTH_TOKEN": {
+      "required": true,
+      "description": "Your Twilio Auth Token found on your account dashboard."
+    },
+    "TWILIO_NUMBER": {
+      "required": true,
+      "description": "The Twilio phone number you set up. This will be the number you send tweets to and receive notifications from."
+    },
+    "TWITTER_CONSUMER_KEY": {
+      "required": true,
+      "description": "Your Twitter Consumer Key found in your Twitter application Keys and Access Tokens."
+    },
+    "TWITTER_CONSUMER_SECRET": {
+      "required": true,
+      "description": "Your Twitter Consumer Secret found in your Twitter application Keys and Access Tokens."
+    },
+    "TWITTER_ACCESS_TOKEN": {
+      "required": true,
+      "description": "Your Twitter Access Token found in your Twitter application Keys and Access Tokens."
+    },
+    "TWITTER_ACCESS_SECRET": {
+      "required": true,
+      "description": "Your Twitter Access Token Secret found in your Twitter application Keys and Access Tokens."
+    },
+    "TWITTER_USERNAME": {
+      "required": true,
+      "description": "Your Twitter account username. This is the account you want to tweet from and receive notifications from."
+    },
+    "MY_PHONE_NUMBER": {
+      "required": true,
+      "description": "Your mobile phone number that you want to tweet from and receive notifications on."
+    }
+  }
+}
