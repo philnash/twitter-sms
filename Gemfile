@@ -7,6 +7,7 @@ gem 'rack', '~> 1.5.0'
 gem 'twitter', '~> 5.13.0'
 gem 'thin'
 gem 'twilio-ruby'
+gem 'rake'
 
 group :development do
   gem 'envyable'
