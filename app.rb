@@ -1,50 +1,60 @@
 configure :development do
   Bundler.require :development
-  Envyable.load('config/env.yml', 'development')
+  Envyable.load("config/env.yml", "development")
 end
 
-use Rack::TwilioWebhookAuthentication, ENV['TWILIO_AUTH_TOKEN'], '/messages'
-
-twitter = Twitter::REST::Client.new do |config|
-  config.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
-  config.consumer_secret     = ENV['TWITTER_CONSUMER_SECRET']
-  config.access_token        = ENV['TWITTER_ACCESS_TOKEN']
-  config.access_token_secret = ENV['TWITTER_ACCESS_SECRET']
-end
-
-twilio = Twilio::REST::Client.new(ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN'])
+use Rack::TwilioWebhookAuthentication, ENV["TWILIO_AUTH_TOKEN"], "/messages"
 
 post "/messages" do
-  if params["From"] == ENV["MY_PHONE_NUMBER"]
-    twitter.update params["Body"]
-  end
+  twitter.update(params["Body"]) if params["From"] == ENV["MY_PHONE_NUMBER"]
+  content_type "text/xml"
   "<Response/>"
 end
 
+get "/health" do
+  200
+end
+
+def twilio
+  @twilio ||= Twilio::REST::Client.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"])
+end
+
+def twitter
+  @twitter ||= Twitter::REST::Client.new do |config|
+    config.consumer_key        = ENV["TWITTER_CONSUMER_KEY"]
+    config.consumer_secret     = ENV["TWITTER_CONSUMER_SECRET"]
+    config.access_token        = ENV["TWITTER_ACCESS_TOKEN"]
+    config.access_token_secret = ENV["TWITTER_ACCESS_SECRET"]
+  end
+end
+
+def send_sms(message)
+  twilio.messages.create(
+    :to => ENV["MY_PHONE_NUMBER"],
+    :from => ENV["TWILIO_NUMBER"],
+    :body => message
+  )
+end
+
 EM.schedule do
-  streaming = Twitter::Streaming::Client.new do |config|
-    config.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
-    config.consumer_secret     = ENV['TWITTER_CONSUMER_SECRET']
-    config.access_token        = ENV['TWITTER_ACCESS_TOKEN']
-    config.access_token_secret = ENV['TWITTER_ACCESS_SECRET']
+  TweetStream.configure do |config|
+    config.consumer_key        = ENV["TWITTER_CONSUMER_KEY"]
+    config.consumer_secret     = ENV["TWITTER_CONSUMER_SECRET"]
+    config.oauth_token         = ENV["TWITTER_ACCESS_TOKEN"]
+    config.oauth_token_secret  = ENV["TWITTER_ACCESS_SECRET"]
   end
 
-  streaming.user do |object|
-    case object
-    when Twitter::Tweet
-      if object.user_mentions.any? { |mention| mention.screen_name == ENV['TWITTER_USERNAME'] }
-        twilio.messages.create(
-          :to => ENV['MY_PHONE_NUMBER'],
-          :from => ENV['TWILIO_NUMBER'],
-          :body => "@mention from #{object.user.screen_name}: #{object.text}"
-        )
-      end
-    when Twitter::DirectMessage
-      twilio.messages.create(
-        :to => ENV['MY_PHONE_NUMBER'],
-        :from => ENV['TWILIO_NUMBER'],
-        :body => "DM from #{object.sender.screen_name}: #{object.text}"
-      )
+  client = TweetStream::Client.new
+
+  client.on_direct_message do |direct_message|
+    send_sms("DM from #{direct_message.sender.screen_name}: #{direct_message.text}")
+  end
+
+  client.on_timeline_status do |status|
+    if status.user_mentions.any? { |mention| mention.screen_name == ENV["TWITTER_USERNAME"] }
+      send_sms("@mention from #{status.user.screen_name}: #{status.text}")
     end
   end
+
+  client.userstream
 end
