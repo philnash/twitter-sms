@@ -47,7 +47,9 @@ EM.schedule do
   client = TweetStream::Client.new
 
   client.on_direct_message do |direct_message|
-    send_sms("DM from #{direct_message.sender.screen_name}: #{direct_message.text}")
+    if direct_message.sender.screen_name != ENV["TWITTER_USERNAME"]
+      send_sms("DM from #{direct_message.sender.screen_name}: #{direct_message.text}")
+    end
   end
 
   client.on_timeline_status do |status|
