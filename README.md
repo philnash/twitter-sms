@@ -11,7 +11,7 @@ You will need:
 * a [Twitter app](https://apps.twitter.com) with full Read, Write and Direct Messages access and a generated Access Token and Access Token Secret
 * your mobile phone number
 
-For more information on how to create these items correctly, look out for a blog post on the [Twilio blog](https://www.twilio.com/blog).
+For more information on how to create these items correctly, check out the [blog post on the Twilio blog](https://www.twilio.com/blog/2015/03/send-tweets-via-sms-with-twilio-part-1.html).
 
 Click the deploy button below and fill in the credentials.
 
