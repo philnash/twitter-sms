@@ -30,9 +30,9 @@ end
 
 def send_sms(message)
   twilio.messages.create(
-    :to => ENV["MY_PHONE_NUMBER"],
-    :from => ENV["MY_TWILIO_NUMBER"],
-    :body => message
+    to: ENV["MY_PHONE_NUMBER"],
+    from: ENV["MY_TWILIO_NUMBER"],
+    body: message
   )
 end
 
