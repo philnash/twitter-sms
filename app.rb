@@ -11,6 +11,19 @@ post "/messages" do
   "<Response/>"
 end
 
+post "/voice" do
+  response = Twilio::TwiML::Response.new do |r|
+    r.Say "Hello Mr King, please leave your tweet after the beep", voice: "alice", language: "en-GB"
+    r.Record transcribe: true, transcribeCallback: "/transcription", maxLength: 30
+  end
+  response.to_xml
+end
+
+post "/transcription" do
+  twitter.update("#{params["TranscriptionText"]} #tweetlikelarryking")
+  200
+end
+
 get "/health" do
   200
 end
